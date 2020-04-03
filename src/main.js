@@ -1,5 +1,10 @@
 "use strict";
 
+const FILM_COUNT = 5;
+const TOP_FILM_COUNT = 2;
+const MOST_COMMENT_FILM_COUNT = 2;
+
+
 const createUserProfile = () => {
   return `<section class="header__profile profile">
       <p class="profile__rating">Movie Buff</p>
@@ -118,7 +123,7 @@ render(siteFilmsElement, createFilmsListElement(), `beforeend`);
 const siteFilmListContainerElement = siteFilmsElement.querySelector(
     `.films-list__container`
 );
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < FILM_COUNT; i++) {
   render(siteFilmListContainerElement, createFilmCardElement(), `beforeend`);
 }
 
@@ -132,7 +137,7 @@ render(siteFilmsElement, createListTopFilmsElement(), `beforeend`);
 const siteTopFilmsElement = siteFilmsElement.querySelector(
     `.films-list--extra .films-list__container`
 );
-for (let i = 0; i < 2; i++) {
+for (let i = 0; i < TOP_FILM_COUNT; i++) {
   render(siteTopFilmsElement, createFilmCardElement(), `beforeend`);
 }
 
@@ -142,7 +147,7 @@ render(siteFilmsElement, createListMostCommentsFilmElement(), `beforeend`);
 const siteMostCommentsFilmElement = siteFilmsElement.querySelector(
     `.films-list--extra:last-child .films-list__container`
 );
-for (let i = 0; i < 2; i++) {
+for (let i = 0; i < MOST_COMMENT_FILM_COUNT; i++) {
   render(siteMostCommentsFilmElement, createFilmCardElement(), `beforeend`);
 }
 
