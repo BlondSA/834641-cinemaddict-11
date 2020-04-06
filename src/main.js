@@ -1,98 +1,19 @@
-"use strict";
+import {createUserTemplate} from "./components/user.js";
+import {createMenuTemplate} from "./components/site-menu.js";
+import {createStatsTemplate} from "./components/stats.js";
+import {createSortsTemplate} from "./components/sorts.js";
+import {createFilmsFormTemplate} from "./components/films-form.js";
+import {createFilmsListTemplate} from "./components/films-list.js";
+import {createFilmCardTemplate} from "./components/film-card.js";
+import {createButtonShowMoreTemplate} from "./components/show-more-button.js";
+import {createListTopFilmsTemplate} from "./components/top-film-list.js";
+import {createListMostCommentsFilmTemplate} from "./components/most-comments-film-list.js";
+import {createStatisticsFilmTemplate} from "./components/statistics.js";
+import {createFilmDetailTemplate} from "./components/detail-film.js";
 
 const FILM_COUNT = 5;
 const TOP_FILM_COUNT = 2;
 const MOST_COMMENT_FILM_COUNT = 2;
-
-
-const createUserProfile = () => {
-  return `<section class="header__profile profile">
-      <p class="profile__rating">Movie Buff</p>
-      <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-    </section>`;
-};
-
-const createMenuElement = () => {
-  return `<nav class="main-navigation">
-      <div class="main-navigation__items">
-        <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-        <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">13</span></a>
-        <a href="#history" class="main-navigation__item">History <span class="main-navigation__item-count">4</span></a>
-        <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">8</span></a>
-      </div>
-    </nav>`;
-};
-
-const createStatsElement = () => {
-  return `<a href="#stats" class="main-navigation__additional">Stats</a>`;
-};
-
-const createSortsElement = () => {
-  return `<ul class="sort">
-      <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
-      <li><a href="#" class="sort__button">Sort by date</a></li>
-      <li><a href="#" class="sort__button">Sort by rating</a></li>
-    </ul>`;
-};
-
-const createFilmsFormElement = () => {
-  return `<section class="films"></section>`;
-};
-
-const createFilmsListElement = () => {
-  return `<section class="films-list">
-    <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
-    <div class="films-list__container">
-    </div>
-  </section>`;
-};
-
-const createFilmCardElement = () => {
-  return `<article class="film-card">
-    <h3 class="film-card__title">The Dance of Life</h3>
-    <p class="film-card__rating">8.3</p>
-    <p class="film-card__info">
-      <span class="film-card__year">1929</span>
-      <span class="film-card__duration">1h 55m</span>
-      <span class="film-card__genre">Musical</span>
-    </p>
-    <img src="./images/posters/the-dance-of-life.jpg" alt="" class="film-card__poster">
-    <p class="film-card__description">Burlesque comic Ralph "Skid" Johnson (Skelly), and specialty dancer Bonny Lee King (Carroll), end up together on a cold, rainy night at a tr…</p>
-    <a class="film-card__comments">5 comments</a>
-    <form class="film-card__controls">
-      <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
-      <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>
-      <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
-    </form>
-  </article>`;
-};
-
-const createButtonShowMoreElement = () => {
-  return `<button class="films-list__show-more">Show more</button>`;
-};
-
-const createListTopFilmsElement = () => {
-  return `<section class="films-list--extra">
-    <h2 class="films-list__title">Top rated</h2>
-    <div class="films-list__container">
-    </div>
-  </section>`;
-};
-
-const createListMostCommentsFilmElement = () => {
-  return `<section class="films-list--extra">
-    <h2 class="films-list__title">Most commented</h2>
-
-    <div class="films-list__container">
-    </div>
-  </section>`;
-};
-
-const createStatisticsFilmElement = () => {
-  return `<section class="footer__statistics">
-      <p>130 291 movies inside</p>
-    </section>`;
-};
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -100,57 +21,64 @@ const render = (container, template, place) => {
 
 // Звание пользователя;
 const siteHeaderElement = document.querySelector(`.header`);
-render(siteHeaderElement, createUserProfile(), `beforeend`);
+render(siteHeaderElement, createUserTemplate(), `beforeend`);
 
 // Меню (фильтры и статистика);
 // Фильтры
 const siteMainElement = document.querySelector(`.main`);
-render(siteMainElement, createMenuElement(), `beforeend`);
+render(siteMainElement, createMenuTemplate(), `beforeend`);
 // Статистика
 const siteNavigationElement = siteMainElement.querySelector(`.main-navigation`);
-render(siteNavigationElement, createStatsElement(), `beforeend`);
+render(siteNavigationElement, createStatsTemplate(), `beforeend`);
 
 // Сортировка
-render(siteMainElement, createSortsElement(), `beforeend`);
+render(siteMainElement, createSortsTemplate(), `beforeend`);
 
 // Поле с карточками
-render(siteMainElement, createFilmsFormElement(), `beforeend`);
+render(siteMainElement, createFilmsFormTemplate(), `beforeend`);
 
 const siteFilmsElement = siteMainElement.querySelector(`.films`);
-render(siteFilmsElement, createFilmsListElement(), `beforeend`);
+render(siteFilmsElement, createFilmsListTemplate(), `beforeend`);
 
 // Карточка фильма;
 const siteFilmListContainerElement = siteFilmsElement.querySelector(
     `.films-list__container`
 );
 for (let i = 0; i < FILM_COUNT; i++) {
-  render(siteFilmListContainerElement, createFilmCardElement(), `beforeend`);
+  render(siteFilmListContainerElement, createFilmCardTemplate(), `beforeend`);
 }
 
 // Кнопка «Show more»;
 const siteFilmListElement = siteFilmsElement.querySelector(`.films-list`);
-render(siteFilmListElement, createButtonShowMoreElement(), `beforeend`);
+render(siteFilmListElement, createButtonShowMoreTemplate(), `beforeend`);
 
 // Карточки фильма в блоках «Top rated»;
-render(siteFilmsElement, createListTopFilmsElement(), `beforeend`);
+render(siteFilmsElement, createListTopFilmsTemplate(), `beforeend`);
 
 const siteTopFilmsElement = siteFilmsElement.querySelector(
     `.films-list--extra .films-list__container`
 );
 for (let i = 0; i < TOP_FILM_COUNT; i++) {
-  render(siteTopFilmsElement, createFilmCardElement(), `beforeend`);
+  render(siteTopFilmsElement, createFilmCardTemplate(), `beforeend`);
 }
 
 // и «Most commented» (доп.задание)
-render(siteFilmsElement, createListMostCommentsFilmElement(), `beforeend`);
+render(siteFilmsElement, createListMostCommentsFilmTemplate(), `beforeend`);
 
 const siteMostCommentsFilmElement = siteFilmsElement.querySelector(
     `.films-list--extra:last-child .films-list__container`
 );
 for (let i = 0; i < MOST_COMMENT_FILM_COUNT; i++) {
-  render(siteMostCommentsFilmElement, createFilmCardElement(), `beforeend`);
+  render(siteMostCommentsFilmElement, createFilmCardTemplate(), `beforeend`);
 }
 
-// Подробная информация о фильме (попап).
+// Статистика футер
 const siteFooterElement = document.querySelector(`.footer`);
-render(siteFooterElement, createStatisticsFilmElement(), `beforeend`);
+render(siteFooterElement, createStatisticsFilmTemplate(), `beforeend`);
+
+// Подробная информация о фильме (попап).
+render(siteFooterElement, createFilmDetailTemplate(), `afterend`);
+
+// Временно добавил класс скрывающий всплывающее окно
+const sitePopupElement = document.querySelector(`.film-details`);
+sitePopupElement.classList.add(`visually-hidden`);
