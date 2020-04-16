@@ -10,6 +10,7 @@ import {createListTopFilmsTemplate} from "./components/top-film-list.js";
 import {createListMostCommentsFilmTemplate} from "./components/most-comments-film-list.js";
 import {createStatisticsFilmTemplate} from "./components/statistics.js";
 import {createFilmDetailTemplate} from "./components/detail-film.js";
+import {generateFilmCards} from "./components/mock/film-card.js";
 
 const FILM_COUNT = 5;
 const TOP_FILM_COUNT = 2;
@@ -44,8 +45,11 @@ render(siteFilmsElement, createFilmsListTemplate(), `beforeend`);
 const siteFilmListContainerElement = siteFilmsElement.querySelector(
     `.films-list__container`
 );
-for (let i = 0; i < FILM_COUNT; i++) {
-  render(siteFilmListContainerElement, createFilmCardTemplate(), `beforeend`);
+
+const films = generateFilmCards(FILM_COUNT);
+
+for (let i = 0; i < films.length; i++) {
+  render(siteFilmListContainerElement, createFilmCardTemplate(films[i]), `beforeend`);
 }
 
 // Кнопка «Show more»;
@@ -59,7 +63,7 @@ const siteTopFilmsElement = siteFilmsElement.querySelector(
     `.films-list--extra .films-list__container`
 );
 for (let i = 0; i < TOP_FILM_COUNT; i++) {
-  render(siteTopFilmsElement, createFilmCardTemplate(), `beforeend`);
+  render(siteTopFilmsElement, createFilmCardTemplate(films[i]), `beforeend`);
 }
 
 // и «Most commented» (доп.задание)
@@ -69,7 +73,7 @@ const siteMostCommentsFilmElement = siteFilmsElement.querySelector(
     `.films-list--extra:last-child .films-list__container`
 );
 for (let i = 0; i < MOST_COMMENT_FILM_COUNT; i++) {
-  render(siteMostCommentsFilmElement, createFilmCardTemplate(), `beforeend`);
+  render(siteMostCommentsFilmElement, createFilmCardTemplate(films[i]), `beforeend`);
 }
 
 // Статистика футер
