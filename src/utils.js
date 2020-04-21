@@ -23,4 +23,13 @@ let getRandomArrayElements = function (array) {
   return getElements;
 };
 
-export {getRandomIntInclusive, getRandomElement, getRandomArrayElements};
+const cutText = (text, limit) => {
+  text = text.trim();
+  if (text.length <= limit) {
+    return text;
+  }
+  text = text.slice(0, limit);
+  return text.trim() + `...`;
+};
+
+export {getRandomIntInclusive, getRandomElement, getRandomArrayElements, cutText};

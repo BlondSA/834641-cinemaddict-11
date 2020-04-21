@@ -1,4 +1,4 @@
-import {getRandomIntInclusive, getRandomElement, getRandomArrayElements} from "../../utils.js";
+import {getRandomIntInclusive, getRandomElement, getRandomArrayElements, cutText} from "../../utils.js";
 import {MONTH_NAMES, COUNTRY, ACTORS, WRITERS, DIRECTOR, DESCRIPTIONS, POSTERS, GENRES, TITLES, NAMES, EMOJIS, COMMENT_TEXT} from "../../const.js";
 
 const RATING_MIN = 0;
@@ -24,7 +24,8 @@ const generateFilmCard = () => {
     duration: `${getRandomIntInclusive(HOUR_MIN, HOUR_MAX)}h ${getRandomIntInclusive(MINUTE_MIN, MINUTE_MAX)}m`,
     genres: getRandomElement(GENRES),
     poster: getRandomElement(POSTERS),
-    description: getRandomArrayElements(DESCRIPTIONS).join(` `),
+    fullDescription: getRandomArrayElements(DESCRIPTIONS).join(` `),
+    description: cutText(getRandomArrayElements(DESCRIPTIONS).join(` `), 139),
     comments: getRandomIntInclusive(COMMENTS_MIN, COMMENTS_MAX),
     addWatchClass: Math.random() > 0.5 ? `film-card__controls-item--active` : ``,
     watchedClass: Math.random() > 0.5 ? `film-card__controls-item--active` : ``,

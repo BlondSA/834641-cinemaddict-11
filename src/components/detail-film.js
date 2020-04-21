@@ -8,7 +8,6 @@ export const createFilmDetailTemplate = (datailsFilm) => {
     genres,
     country,
     duration,
-    description,
     director,
     ratingAge,
     writers,
@@ -19,6 +18,7 @@ export const createFilmDetailTemplate = (datailsFilm) => {
     emoji,
     text,
     date,
+    fullDescription,
   } = datailsFilm;
   return `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
@@ -80,7 +80,7 @@ export const createFilmDetailTemplate = (datailsFilm) => {
             </table>
 
             <p class="film-details__film-description">
-            ${description}
+            ${fullDescription}
             </p>
           </div>
         </div>

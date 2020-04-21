@@ -90,7 +90,7 @@ const COUNTRY = [
   `CANADA`,
   `AUSTRIA`,
   `ALBANIA`,
-  `CCAMBODIA`,
+  `CAMBODIA`,
   `GERMANY`,
   `ICELAND`,
   `ISRAEL`,
