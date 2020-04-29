@@ -1,3 +1,5 @@
+import {createElement} from "../utils.js";
+
 const createFilterMarkup = (filter, isChecked) => {
   const {name, count} = filter;
 
@@ -5,11 +7,12 @@ const createFilterMarkup = (filter, isChecked) => {
     `<a href="#${name}" class="main-navigation__item
     ${isChecked ? `main-navigation__item--active` : ``}">
     ${name}
-    ${(name === `All movies`) ? `` : `<span class="main-navigation__item-count">${count}</span></a>`}`
+    ${count ? `<span class="main-navigation__item-count">${count}</span>` : ``}
+    </a>`
   );
 };
 
-export const createMenuTemplate = (filters) => {
+const createMenuTemplate = (filters) => {
   const filtersMarkup = filters.map((it, i) => createFilterMarkup(it, i === 0)).join(`\n`);
 
   return `<nav class="main-navigation">
@@ -18,3 +21,28 @@ export const createMenuTemplate = (filters) => {
       </div>
     </nav>`;
 };
+
+export default class Menu {
+  constructor(filters) {
+    this._filters = filters;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createMenuTemplate(this._filters);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+

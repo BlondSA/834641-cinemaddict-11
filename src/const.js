@@ -38,7 +38,7 @@ const DESCRIPTIONS = [
   `Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`,
   `Sed sed nisi sed augue convallis suscipit in sed felis.`,
   `Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus.`,
-  `In rutrum ac purus sit amet tempus. `
+  `In rutrum ac purus sit amet tempus. `,
 ];
 
 const DIRECTOR = [
@@ -83,7 +83,8 @@ const ACTORS = [
   `Denzel Washington`,
   `Spencer Tracy`,
   `Laurence Olivier`,
-  `Jack Lemmon`];
+  `Jack Lemmon`,
+];
 
 const COUNTRY = [
   `USA`,
@@ -120,12 +121,7 @@ const NAMES = [
   `Peter Travers`,
 ];
 
-const EMOJIS = [
-  `smile`,
-  `angry`,
-  `puke`,
-  `sleeping`,
-];
+const EMOJIS = [`smile`, `angry`, `puke`, `sleeping`];
 
 const COMMENT_TEXT = [
   `Interesting setting and a good cast`,
@@ -134,4 +130,17 @@ const COMMENT_TEXT = [
   `Almost two hours? Seriously?`,
 ];
 
-export  {MONTH_NAMES, COUNTRY, ACTORS, WRITERS, DIRECTOR, DESCRIPTIONS, POSTERS, GENRES, TITLES, NAMES, EMOJIS, COMMENT_TEXT};
+export {
+  MONTH_NAMES,
+  COUNTRY,
+  ACTORS,
+  WRITERS,
+  DIRECTOR,
+  DESCRIPTIONS,
+  POSTERS,
+  GENRES,
+  TITLES,
+  NAMES,
+  EMOJIS,
+  COMMENT_TEXT,
+};
