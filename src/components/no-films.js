@@ -11,7 +11,7 @@ const createNoFilmsTemplate = () => {
 };
 
 
-export class NoFilmsComponent {
+export default class NoFilmsComponent {
   constructor() {
     this._element = null;
   }
