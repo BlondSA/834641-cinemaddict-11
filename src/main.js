@@ -10,7 +10,7 @@ import ListTopFilmsComponent from "./components/top-film-list.js";
 import ListMostCommentsFilmComponent from "./components/most-comments-film-list.js";
 import StatisticsFilmComponent from "./components/statistics.js";
 import FilmDetailComponent from "./components/detail-film.js";
-import NoDataComponent from "./components/no-films.js";
+import NoFilmsComponent from "./components/no-films.js";
 import {generateFilters} from "./mock/filter.js";
 import {generateFilmCards} from "./mock/film-card.js";
 import {render, RenderPosition} from "./utils.js";
@@ -103,7 +103,7 @@ const renderFilms = () => {
   const films = generateFilmCards(FILM_COUNT);
 
   if (films.length === 0) {
-    render(siteMainElement, new NoDataComponent().getElement());
+    render(siteMainElement, new NoFilmsComponent().getElement());
   }
 
   let showingFilmCount = SHOWING_FILM_STEP;
