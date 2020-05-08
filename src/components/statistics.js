@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import AbstractComponent from "./abstract-component.js";
 
 const createStatisticsFilmTemplate = () => {
   return `<section class="footer__statistics">
@@ -6,24 +6,8 @@ const createStatisticsFilmTemplate = () => {
     </section>`;
 };
 
-export default class StatisticsFilm {
-  constructor() {
-    this._element = null;
-  }
-
+export default class StatisticsFilm extends AbstractComponent {
   getTemplate() {
     return createStatisticsFilmTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

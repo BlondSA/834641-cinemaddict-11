@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import AbstractComponent from "./abstract-component.js";
 
 const createFilterMarkup = (filter, isChecked) => {
   const {name, count} = filter;
@@ -22,27 +22,14 @@ const createMenuTemplate = (filters) => {
     </nav>`;
 };
 
-export default class Menu {
+export default class Menu extends AbstractComponent {
   constructor(filters) {
+    super();
     this._filters = filters;
-
-    this._element = null;
   }
 
   getTemplate() {
     return createMenuTemplate(this._filters);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

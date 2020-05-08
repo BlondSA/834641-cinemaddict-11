@@ -1,27 +1,11 @@
-import {createElement} from "../utils.js";
+import AbstractComponent from "./abstract-component.js";
 
 const createStatsTemplate = () => {
   return `<a href="#stats" class="main-navigation__additional">Stats</a>`;
 };
 
-export default class Stats {
-  constructor() {
-    this._element = null;
-  }
-
+export default class Stats extends AbstractComponent {
   getTemplate() {
     return createStatsTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
