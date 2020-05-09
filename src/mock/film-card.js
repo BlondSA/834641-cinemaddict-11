@@ -1,4 +1,4 @@
-import {getRandomIntInclusive, getRandomElement, getRandomArrayElements, cutText, getRundomBoolean} from "../utils.js";
+import {getRandomIntInclusive, getRandomElement, getRandomArrayElements, cutText, getRundomBoolean} from "../utils/common.js";
 import {MONTH_NAMES, COUNTRY, ACTORS, WRITERS, DIRECTOR, DESCRIPTIONS, POSTERS, GENRES, TITLES, NAMES, EMOJIS, COMMENT_TEXT} from "../const.js";
 
 const RATING_MIN = 0;
