@@ -6,6 +6,11 @@ export const SortType = {
   RATING: `rating`,
 };
 
+const removeClassSort = (elem) => {
+  const sorts = elem.querySelectorAll(`.sort__button`);
+  sorts.forEach((sort) => sort.classList.remove(`sort__button--active`));
+};
+
 const createSortsTemplate = () => {
   return `<ul class="sort">
       <li><a href="#" data-sort-type="${SortType.DEFAULT}" class="sort__button sort__button--active">Sort by default</a></li>
@@ -24,7 +29,7 @@ export default class Sorts extends AbstractComponent {
   }
 
   getSortType() {
-    return this._currenSortType;
+    return this._currentSortType;
   }
 
   setSortTypeChangeHandler(handler) {
@@ -34,17 +39,17 @@ export default class Sorts extends AbstractComponent {
       if (evt.target.tagName !== `A`) {
         return;
       }
-
+      removeClassSort(this.getElement());
       const sortType = evt.target.dataset.sortType;
-
-      if (this._currenSortType === sortType) {
+      evt.target.classList.add(`sort__button--active`);
+      if (this._currentSortType === sortType) {
         return;
       }
 
-      this._currenSortType = sortType;
+      this._currentSortType = sortType;
 
 
-      handler(this._currenSortType);
+      handler(this._currentSortType);
     });
   }
 }

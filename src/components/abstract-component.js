@@ -1,7 +1,7 @@
 import {createElement} from "../utils/render.js";
 
-const ONLY_ONE_INSTANCE = `Abstract method not implemented: getTemplate`;
-const METHOD_NOT_INPLEMENTED = `Abstract method not implemented: getTemplate`;
+const ONLY_ONE_INSTANCE = `Can't instantiate AbstractComponent, only concrete one.`;
+const METHOD_NOT_INPLEMENTED_GET_TEMPLATE = `Abstract method not implemented: getTemplate`;
 export default class AbstractComponent {
   constructor() {
     if (new.target === AbstractComponent) {
@@ -11,7 +11,7 @@ export default class AbstractComponent {
   }
 
   getTemplate() {
-    throw new Error(METHOD_NOT_INPLEMENTED);
+    throw new Error(METHOD_NOT_INPLEMENTED_GET_TEMPLATE);
   }
 
   getElement() {
