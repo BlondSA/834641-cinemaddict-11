@@ -51,4 +51,4 @@ const generateFilmCards = (count) => {
 };
 
 
-export {generateFilmCards};
+export {generateFilmCard, generateFilmCards};

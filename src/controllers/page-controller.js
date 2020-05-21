@@ -1,10 +1,9 @@
 import SortsComponent, {SortType} from "../components/sorts.js";
 import FilmsListComponent from "../components/films-list.js";
-import FilmCardComponent from "../components/film-card.js";
+import MovieController from "../controllers/movie-controller.js";
 import ButtonShowMoreComponent from "../components/show-more-button.js";
 import ListTopFilmsComponent from "../components/top-film-list.js";
 import ListMostCommentsFilmComponent from "../components/most-comments-film-list.js";
-import FilmDetailComponent from "../components/film-detail.js";
 import NoFilmsComponent from "../components/no-films.js";
 import {render, remove, RenderPosition} from "../utils/render.js";
 
@@ -12,63 +11,14 @@ const SHOWING_MOVIES_COUNT = 5;
 const START_SHOWIING_MOVIES_COUNT = 0;
 const TOP_MOVIES_COUNT = 2;
 const MOST_COMMENT_MOVIES_COUNT = 2;
-const ESCAPE_BUTTON = `Escape`;
-const ESC_BUTTON = `Esc`;
-
-// Функция создания карточки фильма
-const renderFilm = (filmsListElement, film) => {
-  const bodyElement = document.querySelector(`body`);
-  // Открытие попапа
-  const openPopup = () => {
-    bodyElement.appendChild(filmDetailsComponent.getElement());
-  };
-
-  // Закрытие попапа
-  const closePopup = () => {
-    bodyElement.removeChild(filmDetailsComponent.getElement());
-    const closeButton = filmDetailsComponent.getElement().querySelector(
-        `.film-details__close-btn`
-    );
-    closeButton.removeEventListener(`click`, closePopup);
-  };
-
-  // Закрытие попапа по нажатию на ESC
-  const onEscKeyDown = (evt) => {
-    const isEscKey = evt.key === ESCAPE_BUTTON || evt.key === ESC_BUTTON;
-    if (isEscKey) {
-      closePopup();
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    }
-  };
-
-  const films = new FilmCardComponent(film);
-
-  // Создание попапа по нажатию на постер, заголовок, коментарии
-  films.setClickHandler((evt) => {
-    if (
-      evt.target.classList.contains(`film-card__poster`) ||
-      evt.target.classList.contains(`film-card__title`) ||
-      evt.target.classList.contains(`film-card__comments`)
-    ) {
-      evt.preventDefault();
-      openPopup();
-      document.addEventListener(`keydown`, onEscKeyDown);
-    }
-  });
-  const filmDetailsComponent = new FilmDetailComponent(film);
-
-  filmDetailsComponent.setClickHandler(() => {
-    closePopup();
-    document.removeEventListener(`keydown`, onEscKeyDown);
-  });
-  render(filmsListElement, films, RenderPosition.BEFOREEND);
-};
 
 export default class PageController {
   constructor(container, filmsArray) {
     this._container = container;
     this._filmsArray = filmsArray.slice();
     this._originalFilmsArray = filmsArray;
+
+    this._movieController = new MovieController();
 
     this._noFilmsComponent = new NoFilmsComponent();
     this._sortComponent = new SortsComponent();
@@ -99,7 +49,7 @@ export default class PageController {
       siteFilmListContainerElement.innerHTML = ``;
       this._filmsArray.forEach((film, i) => {
         if (i < showingFilmsCount) {
-          renderFilm(siteFilmListContainerElement, film);
+          this._movieController.renderFilm(siteFilmListContainerElement, film);
         }
       });
     };
@@ -146,7 +96,7 @@ export default class PageController {
     const siteTopFilmsElement = container.querySelector(`.films-list--extra .films-list__container`);
 
     const filmsTopRating = this._filmsArray.sort((a, b) => b.rating - a.rating);
-    filmsTopRating.slice(START_SHOWIING_MOVIES_COUNT, TOP_MOVIES_COUNT).forEach((film) => renderFilm(siteTopFilmsElement, film));
+    filmsTopRating.slice(START_SHOWIING_MOVIES_COUNT, TOP_MOVIES_COUNT).forEach((film) => this._movieController.renderFilm(siteTopFilmsElement, film));
 
 
     // и «Most commented» (доп.задание)
@@ -155,7 +105,7 @@ export default class PageController {
 
     const filmsMostComment = this._filmsArray.sort((a, b) => b.comments - a.comments);
     filmsMostComment.slice(START_SHOWIING_MOVIES_COUNT, MOST_COMMENT_MOVIES_COUNT).forEach((film) =>
-      renderFilm(siteMostCommentsFilmElement, film)
+      this._movieController.renderFilm(siteMostCommentsFilmElement, film)
     );
 
     this._sortComponent.setSortTypeChangeHandler((sortType) => {
