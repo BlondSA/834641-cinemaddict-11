@@ -8,10 +8,11 @@ const ESC_BUTTON = `Esc`;
 
 
 export default class MovieController {
-  constructor(container) {
+  constructor(container, onDataChange) {
     this._conteiner = container;
     this._filmCardComponent = null;
     this._filmDetailsComponent = null;
+    this._onDataChange = onDataChange;
 
 
     this._openPopup = this._openPopup.bind(this);
@@ -27,13 +28,31 @@ export default class MovieController {
     this._filmCardComponent.setClickHandler((evt) => {
       if (
         evt.target.classList.contains(`film-card__poster`) ||
-          evt.target.classList.contains(`film-card__title`) ||
-          evt.target.classList.contains(`film-card__comments`)
+        evt.target.classList.contains(`film-card__title`) ||
+        evt.target.classList.contains(`film-card__comments`)
       ) {
         evt.preventDefault();
         this._openPopup();
         document.addEventListener(`keydown`, this._onEscKeyDown);
       }
+    });
+
+    this._filmCardComponent.setAddToWatchlistButtonClickHandler(() => {
+      this._onDataChange(this, film, Object.assign({}, film, {
+        isAddedToWatch: !film.isAddedToWatch,
+      }));
+    });
+
+    this._filmCardComponent.setWatchedButtonClickHandler(() => {
+      this._onDataChange(this, film, Object.assign({}, film, {
+        isWatched: !film.isWatched,
+      }));
+    });
+
+    this._filmCardComponent.setFavoriteButtonClickHandler(() => {
+      this._onDataChange(this, film, Object.assign({}, film, {
+        isFavorite: !film.isFavorite,
+      }));
     });
 
     this._filmDetailComponent.setClickHandler(() => {

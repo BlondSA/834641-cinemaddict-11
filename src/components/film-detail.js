@@ -1,4 +1,5 @@
-import AbstractComponent from "./abstract-component.js";
+import AbstractSmartComponent from "./abstract-smart-component.js";
+
 
 const createFilmDetailTemplate = (filmDetails) => {
   const {
@@ -193,17 +194,52 @@ const createFilmDetailTemplate = (filmDetails) => {
   </section>`;
 };
 
-export default class FilmDetail extends AbstractComponent {
+export default class FilmDetail extends AbstractSmartComponent {
   constructor(filmDetails) {
     super();
     this._filmDetails = filmDetails;
+    this._clickHandler = null;
+
+    this._subscribeOnEvents();
   }
 
   getTemplate() {
     return createFilmDetailTemplate(this._filmDetails);
   }
 
+  recoveryListeners() {
+    this.setClickHandler(this._clickHandler);
+    this._subscribeOnEvents();
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
   setClickHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
+    this._clickHandler = handler;
+  }
+
+  _subscribeOnEvents() {
+    const element = this.getElement();
+
+    element.querySelector(`.card__date-deadline-toggle`).addEventListener(`click`, () => {
+      this._isDateShowing = !this._isDateShowing;
+      this.rerender();
+    });
+
+    element.querySelector(`.card__repeat-toggle`).addEventListener(`click`, () => {
+      this._isRepeatingTask = !this._isRepeatingTask;
+      this.rerender();
+    });
+
+    const repeatDays = element.querySelector(`.card__repeat-days`);
+    if (repeatDays) {
+      repeatDays.addEventListener(`change`, (evt) => {
+        this._activeRepeatingDays[evt.target.value] = evt.target.checked;
+        this.rerender();
+      });
+    }
   }
 }

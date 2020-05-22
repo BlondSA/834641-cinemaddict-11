@@ -1,5 +1,12 @@
 import AbstractComponent from "./abstract-component.js";
 
+const createButtonMarkup = (className, name, isActive = true) => {
+  return `<button class="film-card__controls-item button film-card__controls-item--${className}
+  ${isActive ? `film-card__controls-item--active` : ``}">
+    ${name}
+  </button>`;
+};
+
 const createFilmCardTemplate = (film) => {
   const {
     title,
@@ -10,10 +17,11 @@ const createFilmCardTemplate = (film) => {
     poster,
     description,
     comments,
-    isAddedToWatch,
-    isWatched,
-    isFavorite,
   } = film;
+
+  const buttonAddWatchList = createButtonMarkup(`add-to-watchlist`, `Add to watchlist`, !film.isAddedToWatch);
+  const buttonMarkAsWatches = createButtonMarkup(`mark-as-watched`, `Mark as watched`, !film.isWatched);
+  const buttonMarkAsFavorite = createButtonMarkup(`favorite`, `Mark as favorite`, !film.isFavorite);
 
   return `<article class="film-card">
     <h3 class="film-card__title">${title}</h3>
@@ -27,9 +35,9 @@ const createFilmCardTemplate = (film) => {
     <p class="film-card__description">${description}</p>
     <a class="film-card__comments">${comments} comments</a>
     <form class="film-card__controls">
-      <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isAddedToWatch}">Add to watchlist</button>
-      <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${isWatched}">Mark as watched</button>
-      <button class="film-card__controls-item button film-card__controls-item--favorite ${isFavorite}">Mark as favorite</button>
+      ${buttonAddWatchList}
+      ${buttonMarkAsWatches}
+      ${buttonMarkAsFavorite}
     </form>
   </article>`;
 };
@@ -46,5 +54,20 @@ export default class FilmCard extends AbstractComponent {
 
   setClickHandler(handler) {
     this.getElement().addEventListener(`click`, handler);
+  }
+
+  setAddToWatchlistButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`)
+      .addEventListener(`click`, handler);
+  }
+
+  setWatchedButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
+      .addEventListener(`click`, handler);
+  }
+
+  setFavoriteButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--favorite`)
+      .addEventListener(`click`, handler);
   }
 }
