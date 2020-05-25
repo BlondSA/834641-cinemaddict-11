@@ -1,8 +1,50 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
+import {EMOJIS} from "../const.js";
 
 const createButtonMarkup = (name, descr, isActive = true) => {
   return `<input type="checkbox" class="film-details__control-input visually-hidden" id="${name}" name="${name}" ${isActive ? `checked` : ``}>
   <label for="${name}" class="film-details__control-label film-details__control-label--${name}">${descr}</label>`;
+};
+
+const createEmojiTemplate = (emojis) => {
+  return emojis
+    .map((emoji) => {
+      return (
+        `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}">
+        <label class="film-details__emoji-label" for="emoji-${emoji}">
+        <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="emoji">
+        </label>`
+      );
+    })
+    .join(`\n`);
+};
+
+const createCommentTemplate = (commentData) => {
+  const {commentId, commentEmotion, commentText, commentAuthor, commentDate} = commentData;
+
+  return (
+    `<li class="film-details__comment" id="${commentId}">
+    <span class="film-details__comment-emoji">
+      <img src="./images/emoji/${commentEmotion}.png" width="55" height="55" alt="emoji-${commentEmotion}">
+    </span>
+    <div>
+      <p class="film-details__comment-text">${commentText}</p>
+      <p class="film-details__comment-info">
+        <span class="film-details__comment-author">${commentAuthor}</span>
+        <span class="film-details__comment-day">${commentDate}</span>
+        <button class="film-details__comment-delete">Delete</button>
+      </p>
+    </div>
+  </li>`
+  );
+};
+
+const createGenresTemplate = (genres) => {
+  return genres.map((it) => `<span class="film-details__genre">${it}</span>`).join(`\n`);
+};
+
+const createAddEmojiTemplate = (emoji) => {
+  return emoji ? `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">` : ``;
 };
 
 const createFilmDetailTemplate = (filmDetails) => {
@@ -21,12 +63,13 @@ const createFilmDetailTemplate = (filmDetails) => {
     month,
     year,
     comments,
-    author,
-    emoji,
-    text,
-    date,
     fullDescription,
   } = filmDetails;
+
+  const commentItems = comments.map((it) => createCommentTemplate(it)).join(`\n`);
+  const commentsCount = comments.length;
+  const emojisTemplate = createEmojiTemplate(EMOJIS);
+  const genresList = createGenresTemplate(genres);
 
   const buttonAddWatchList = createButtonMarkup(`watchlist`, `Add to watchlist`, !filmDetails.isAddedToWatch);
   const buttonMarkAsWatches = createButtonMarkup(`watched`, `Already watched`, !filmDetails.isWatched);
@@ -85,14 +128,12 @@ const createFilmDetailTemplate = (filmDetails) => {
               <tr class="film-details__row">
                 <td class="film-details__term">Genres</td>
                 <td class="film-details__cell">
-                  <span class="film-details__genre">${genres}</span>
-                  <span class="film-details__genre">Film-Noir</span>
-                  <span class="film-details__genre">Mystery</span></td>
+                  ${genresList}
               </tr>
             </table>
 
             <p class="film-details__film-description">
-            ${fullDescription}
+              ${fullDescription}
             </p>
           </div>
         </div>
@@ -106,61 +147,10 @@ const createFilmDetailTemplate = (filmDetails) => {
 
       <div class="form-details__bottom-container">
         <section class="film-details__comments-wrap">
-          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments}</span></h3>
+          <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsCount}</span></h3>
 
           <ul class="film-details__comments-list">
-            <li class="film-details__comment">
-              <span class="film-details__comment-emoji">
-                <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-smile">
-              </span>
-              <div>
-                <p class="film-details__comment-text">${text}</p>
-                <p class="film-details__comment-info">
-                  <span class="film-details__comment-author">${author}</span>
-                  <span class="film-details__comment-day">${date}</span>
-                  <button class="film-details__comment-delete">Delete</button>
-                </p>
-              </div>
-            </li>
-            <li class="film-details__comment">
-              <span class="film-details__comment-emoji">
-                <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-sleeping">
-              </span>
-              <div>
-                <p class="film-details__comment-text">${text}</p>
-                <p class="film-details__comment-info">
-                  <span class="film-details__comment-author">${author}</span>
-                  <span class="film-details__comment-day">${date}</span>
-                  <button class="film-details__comment-delete">Delete</button>
-                </p>
-              </div>
-            </li>
-            <li class="film-details__comment">
-              <span class="film-details__comment-emoji">
-                <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-puke">
-              </span>
-              <div>
-                <p class="film-details__comment-text">${text}</p>
-                <p class="film-details__comment-info">
-                  <span class="film-details__comment-author">${author}</span>
-                  <span class="film-details__comment-day">${date}</span>
-                  <button class="film-details__comment-delete">Delete</button>
-                </p>
-              </div>
-            </li>
-            <li class="film-details__comment">
-              <span class="film-details__comment-emoji">
-                <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-angry">
-              </span>
-              <div>
-                <p class="film-details__comment-text">${text}</p>
-                <p class="film-details__comment-info">
-                  <span class="film-details__comment-author">${author}</span>
-                  <span class="film-details__comment-day">${date}</span>
-                  <button class="film-details__comment-delete">Delete</button>
-                </p>
-              </div>
-            </li>
+            ${commentItems}
           </ul>
 
           <div class="film-details__new-comment">
@@ -171,25 +161,7 @@ const createFilmDetailTemplate = (filmDetails) => {
             </label>
 
             <div class="film-details__emoji-list">
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
-              <label class="film-details__emoji-label" for="emoji-smile">
-                <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
-              </label>
-
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
-              <label class="film-details__emoji-label" for="emoji-sleeping">
-                <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
-              </label>
-
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
-              <label class="film-details__emoji-label" for="emoji-puke">
-                <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
-              </label>
-
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
-              <label class="film-details__emoji-label" for="emoji-angry">
-                <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
-              </label>
+              ${emojisTemplate}
             </div>
           </div>
         </section>
@@ -245,13 +217,67 @@ export default class FilmDetail extends AbstractSmartComponent {
       this._isFavorite = !this._isFavorite;
       this.rerender();
     });
+  }
 
-    // const repeatDays = element.querySelector(`.card__repeat-days`);
-    // if (repeatDays) {
-    //   repeatDays.addEventListener(`change`, (evt) => {
-    //     this._activeRepeatingDays[evt.target.value] = evt.target.checked;
-    //     this.rerender();
-    //   });
-    // }
+  clearFormData() {
+    const form = this.getElement().querySelector(`form`);
+    const emoji = form.querySelector(`.film-details__add-emoji-label`);
+
+    if (emoji.firstChild) {
+      emoji.removeChild(emoji.firstChild);
+    }
+
+    form.reset();
+  }
+
+  setOnDeleteButtonCLickHandler(handler) {
+    const comments = this.getElement().querySelectorAll(
+        `.film-details__comment`
+    );
+
+    comments.forEach((comment) => {
+      const deleteButton = comment.querySelector(
+          `.film-details__comment-delete`
+      );
+
+      deleteButton.addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+
+        handler(comment.id);
+        comment.remove();
+      });
+    });
+  }
+
+  setOnDeleteButtonCLickHandler(handler) {
+    const deleteButton = this.getElement().querySelectorAll(`.film-details__comment-delete`);
+
+    deleteButton.forEach((button) => button.addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+
+      button.disabled = true;
+      button.textContent = `Deleting...`;
+
+      const commentId = button.closest(`.film-details__comment`).id;
+
+      handler(commentId, button);
+    }));
+  }
+
+  setOnInputCommentHandler(handler) {
+    const commentField = this.getElement().querySelector(`.film-details__comment-input`);
+    commentField.addEventListener(`input`, handler);
+  }
+
+  emojiChange(handler) {
+    const element = this.getElement();
+
+    element.querySelector(`.film-details__emoji-list`).addEventListener(`click`, (evt) => {
+      if (evt.target.tagName !== `INPUT`) {
+        return;
+      }
+      handler();
+      this.getElement().querySelector(`.film-details__add-emoji-label`).innerHTML = createAddEmojiTemplate(evt.target.value);
+    });
   }
 }

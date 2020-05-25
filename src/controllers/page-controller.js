@@ -13,17 +13,15 @@ const TOP_MOVIES_COUNT = 2;
 const MOST_COMMENT_MOVIES_COUNT = 2;
 
 export default class PageController {
-  constructor(container, filmsArray) {
+  constructor(container, filmsArray, onViewChange) {
     this._container = container;
-    this._filmsArray = filmsArray.slice();
+    this._filmsArray = filmsArray;
     this._originalFilmsArray = filmsArray;
-
-    this._films = [];
-    this._showedFilmControllers = [];
-
-    this._movieController = new MovieController();
+    this._onViewChange = onViewChange;
 
     this._onDataChange = this._onDataChange.bind(this);
+
+    this._movieController = new MovieController();
     this._noFilmsComponent = new NoFilmsComponent();
     this._sortComponent = new SortsComponent();
     this._filmsListComponent = new FilmsListComponent();
@@ -55,7 +53,7 @@ export default class PageController {
 
     const refreshFilms = () => {
       siteFilmListContainerElement.innerHTML = ``;
-      this._filmsArray.forEach((film, i) => {
+      this._filmsArray.slice().forEach((film, i) => {
         if (i < showingFilmsCount) {
           this._movieController.renderFilm(siteFilmListContainerElement, film, this._onDataChange);
         }
@@ -102,7 +100,7 @@ export default class PageController {
 
     render(container, this._listTopFilmsComponent, RenderPosition.BEFOREEND);
     const siteTopFilmsElement = container.querySelector(`.films-list--extra .films-list__container`);
-    const filmsTopRating = this._filmsArray.sort((a, b) => b.rating - a.rating);
+    const filmsTopRating = this._filmsArray.slice().sort((a, b) => b.rating - a.rating);
     filmsTopRating.slice(START_SHOWIING_MOVIES_COUNT, TOP_MOVIES_COUNT).forEach((film) => this._movieController.renderFilm(siteTopFilmsElement, film, this._onDataChange));
 
 
@@ -110,7 +108,7 @@ export default class PageController {
     render(container, this._listMostCommentsFilmComponent, RenderPosition.BEFOREEND);
     const siteMostCommentsFilmElement = container.querySelector(`.films-list--extra:last-child .films-list__container`);
 
-    const filmsMostComment = this._filmsArray.sort((a, b) => b.comments - a.comments);
+    const filmsMostComment = this._filmsArray.slice().sort((a, b) => b.comments.length - a.comments.length);
     filmsMostComment.slice(START_SHOWIING_MOVIES_COUNT, MOST_COMMENT_MOVIES_COUNT).forEach((film) =>
       this._movieController.renderFilm(siteMostCommentsFilmElement, film, this._onDataChange)
     );
@@ -127,12 +125,17 @@ export default class PageController {
   }
 
   _onDataChange(movieController, oldData, newData) {
-    const index = this._films.findIndex((it) => it === oldData);
+    const index = this._filmsArray.findIndex((it) => it === oldData);
 
     if (index === -1) {
       return;
     }
-    this._films = [].concat(this._films.slice(0, index), newData, this._films.slice(index + 1));
-    movieController.render(this._films[index]);
+    this._filmsArray = [].concat(this._filmsArray.slice(0, index), newData, this._filmsArray.slice(index + 1));
+    movieController.render(this._filmsArray[index]);
+  }
+  _onViewChange() {
+    this._filmsArray.forEach((it) => {
+      it.setDefaultFilmView();
+    });
   }
 }

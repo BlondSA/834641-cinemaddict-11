@@ -8,18 +8,19 @@ const ESC_BUTTON = `Esc`;
 
 
 export default class MovieController {
-  constructor(container, film, onDataChange, setDefaultView) {
+  constructor(container, film, onDataChange, onViewChange) {
     this._conteiner = container;
     this._filmCardComponent = null;
     this._filmDetailsComponent = null;
 
     this._onDataChange = onDataChange;
-    this._setDefaultView = setDefaultView;
+    this._onViewChange = onViewChange;
 
 
     this._openPopup = this._openPopup.bind(this);
     this._closePopup = this._closePopup.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
+    this._setDefaultView = this._setDefaultView.bind(this);
   }
 
   renderFilm(filmsListElement, film) {
@@ -90,7 +91,7 @@ export default class MovieController {
     }
   }
 
-  // _setDefaultView() {
-
-  // }
+  _setDefaultView() {
+    this._closePopup();
+  }
 }

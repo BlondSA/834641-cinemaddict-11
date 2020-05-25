@@ -18,10 +18,11 @@ const createFilmCardTemplate = (film) => {
     description,
     comments,
   } = film;
-
+  const commentsCount = comments.length;
   const buttonAddWatchList = createButtonMarkup(`add-to-watchlist`, `Add to watchlist`, !film.isAddedToWatch);
   const buttonMarkAsWatches = createButtonMarkup(`mark-as-watched`, `Mark as watched`, !film.isWatched);
   const buttonMarkAsFavorite = createButtonMarkup(`favorite`, `Mark as favorite`, !film.isFavorite);
+  const genresList = genres.join(`, `);
 
   return `<article class="film-card">
     <h3 class="film-card__title">${title}</h3>
@@ -29,11 +30,11 @@ const createFilmCardTemplate = (film) => {
     <p class="film-card__info">
       <span class="film-card__year">${year}</span>
       <span class="film-card__duration">${duration}</span>
-      <span class="film-card__genre">${genres}</span>
+      <span class="film-card__genre">${genresList}</span>
     </p>
     <img src="./images/posters/${poster}" alt="" class="film-card__poster">
     <p class="film-card__description">${description}</p>
-    <a class="film-card__comments">${comments} comments</a>
+    <a class="film-card__comments">${commentsCount} comments</a>
     <form class="film-card__controls">
       ${buttonAddWatchList}
       ${buttonMarkAsWatches}
