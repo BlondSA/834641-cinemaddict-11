@@ -8,11 +8,13 @@ const ESC_BUTTON = `Esc`;
 
 
 export default class MovieController {
-  constructor(container, onDataChange) {
+  constructor(container, film, onDataChange, setDefaultView) {
     this._conteiner = container;
     this._filmCardComponent = null;
     this._filmDetailsComponent = null;
+
     this._onDataChange = onDataChange;
+    this._setDefaultView = setDefaultView;
 
 
     this._openPopup = this._openPopup.bind(this);
@@ -23,7 +25,6 @@ export default class MovieController {
   renderFilm(filmsListElement, film) {
     // Функция создания карточки фильма
     this._filmCardComponent = new FilmCardComponent(film);
-    this._filmDetailComponent = new FilmDetailComponent(film);
     // Создание попапа по нажатию на постер, заголовок, коментарии
     this._filmCardComponent.setClickHandler((evt) => {
       if (
@@ -32,7 +33,7 @@ export default class MovieController {
         evt.target.classList.contains(`film-card__comments`)
       ) {
         evt.preventDefault();
-        this._openPopup();
+        this._openPopup(film);
         document.addEventListener(`keydown`, this._onEscKeyDown);
       }
     });
@@ -55,15 +56,17 @@ export default class MovieController {
       }));
     });
 
-    this._filmDetailComponent.setClickHandler(() => {
-      this._closePopup();
-      document.removeEventListener(`keydown`, this._onEscKeyDown);
-    });
     render(filmsListElement, this._filmCardComponent, RenderPosition.BEFOREEND);
   }
 
   // Открытие попапа
-  _openPopup() {
+  _openPopup(film) {
+    this._filmDetailComponent = new FilmDetailComponent(film);
+    this._filmDetailComponent.setClickHandler(() => {
+      this._closePopup();
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
+    });
+
     const bodyElement = document.querySelector(`body`);
     bodyElement.appendChild(this._filmDetailComponent.getElement());
   }
@@ -86,4 +89,8 @@ export default class MovieController {
       document.removeEventListener(`keydown`, this._onEscKeyDown);
     }
   }
+
+  // _setDefaultView() {
+
+  // }
 }

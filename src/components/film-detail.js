@@ -1,5 +1,9 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 
+const createButtonMarkup = (name, descr, isActive = true) => {
+  return `<input type="checkbox" class="film-details__control-input visually-hidden" id="${name}" name="${name}" ${isActive ? `checked` : ``}>
+  <label for="${name}" class="film-details__control-label film-details__control-label--${name}">${descr}</label>`;
+};
 
 const createFilmDetailTemplate = (filmDetails) => {
   const {
@@ -23,6 +27,11 @@ const createFilmDetailTemplate = (filmDetails) => {
     date,
     fullDescription,
   } = filmDetails;
+
+  const buttonAddWatchList = createButtonMarkup(`watchlist`, `Add to watchlist`, !filmDetails.isAddedToWatch);
+  const buttonMarkAsWatches = createButtonMarkup(`watched`, `Already watched`, !filmDetails.isWatched);
+  const buttonMarkAsFavorite = createButtonMarkup(`favorite`, `Add to favorites`, !filmDetails.isFavorite);
+
   return `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
       <div class="form-details__top-container">
@@ -89,14 +98,9 @@ const createFilmDetailTemplate = (filmDetails) => {
         </div>
 
         <section class="film-details__controls">
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
-          <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
-
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
-          <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
-
-          <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
-          <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
+          ${buttonAddWatchList}
+          ${buttonMarkAsWatches}
+          ${buttonMarkAsFavorite}
         </section>
       </div>
 
@@ -224,22 +228,30 @@ export default class FilmDetail extends AbstractSmartComponent {
   _subscribeOnEvents() {
     const element = this.getElement();
 
-    element.querySelector(`.card__date-deadline-toggle`).addEventListener(`click`, () => {
-      this._isDateShowing = !this._isDateShowing;
+    element.querySelector(`#watchlist`).addEventListener(`click`, (evt) => {
+      evt.preventDeafult();
+      this._isAddedToWatch = !this._isAddedToWatch;
       this.rerender();
     });
 
-    element.querySelector(`.card__repeat-toggle`).addEventListener(`click`, () => {
-      this._isRepeatingTask = !this._isRepeatingTask;
+    element.querySelector(`#watched`).addEventListener(`click`, (evt) => {
+      evt.preventDeafult();
+      this._isWatched = !this._isWatched;
       this.rerender();
     });
 
-    const repeatDays = element.querySelector(`.card__repeat-days`);
-    if (repeatDays) {
-      repeatDays.addEventListener(`change`, (evt) => {
-        this._activeRepeatingDays[evt.target.value] = evt.target.checked;
-        this.rerender();
-      });
-    }
+    element.querySelector(`#favorite`).addEventListener(`click`, (evt) => {
+      evt.preventDeafult();
+      this._isFavorite = !this._isFavorite;
+      this.rerender();
+    });
+
+    // const repeatDays = element.querySelector(`.card__repeat-days`);
+    // if (repeatDays) {
+    //   repeatDays.addEventListener(`change`, (evt) => {
+    //     this._activeRepeatingDays[evt.target.value] = evt.target.checked;
+    //     this.rerender();
+    //   });
+    // }
   }
 }
