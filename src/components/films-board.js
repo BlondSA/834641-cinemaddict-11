@@ -4,7 +4,7 @@ const createFilmsFormTemplate = () => {
   return `<section class="films"></section>`;
 };
 
-export default class FilmsForm extends AbstractComponent {
+export default class FilmsBoard extends AbstractComponent {
   getTemplate() {
     return createFilmsFormTemplate();
   }

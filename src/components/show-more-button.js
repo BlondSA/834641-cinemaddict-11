@@ -12,4 +12,9 @@ export default class ButtonShowMore extends AbstractComponent {
   setClickHandler(handler) {
     this.getElement().addEventListener(`click`, handler);
   }
+
+  removeClickHandler(handler) {
+    this.getElement().removeEventListener(`click`, handler);
+  }
+
 }
