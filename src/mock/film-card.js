@@ -1,5 +1,6 @@
 import {getRandomIntInclusive, getRandomElement, getRandomArrayElements, cutText, getRundomBoolean} from "../utils/common.js";
-import {MONTH_NAMES, COUNTRY, ACTORS, WRITERS, DIRECTOR, DESCRIPTIONS, POSTERS, GENRES, TITLES, NAMES, EMOJIS, COMMENT_TEXT} from "../const.js";
+import {MONTH_NAMES, COUNTRY, ACTORS, WRITERS, DIRECTOR, DESCRIPTIONS, POSTERS, GENRES, TITLES} from "../const.js";
+import {generateComments} from "./comments.js";
 
 const RATING_MIN = 0;
 const RATING_MAX = 9;
@@ -23,11 +24,11 @@ const generateFilmCard = () => {
     month: getRandomElement(MONTH_NAMES),
     year: getRandomIntInclusive(DATE_MIN, DATE_MAX),
     duration: `${getRandomIntInclusive(HOUR_MIN, HOUR_MAX)}h ${getRandomIntInclusive(MINUTE_MIN, MINUTE_MAX)}m`,
-    genres: getRandomElement(GENRES),
+    genres: getRandomArrayElements(GENRES),
     poster: getRandomElement(POSTERS),
     fullDescription: getRandomArrayElements(DESCRIPTIONS).join(` `),
     description: cutText(getRandomArrayElements(DESCRIPTIONS).join(` `), TEXT_CUT_COUNT),
-    comments: getRandomIntInclusive(COMMENTS_MIN, COMMENTS_MAX),
+    comments: generateComments(getRandomIntInclusive(COMMENTS_MIN, COMMENTS_MAX)),
     isAddedToWatch: getRundomBoolean(`film-card__controls-item--active`, ``),
     isWatched: getRundomBoolean(`film-card__controls-item--active`, ``),
     isFavorite: getRundomBoolean(`film-card__controls-item--active`, ``),
@@ -37,10 +38,6 @@ const generateFilmCard = () => {
     actors: getRandomArrayElements(ACTORS).join(`, `),
     country: getRandomElement(COUNTRY),
     ratingAge: getRandomIntInclusive(RATING_AGE_MIN, RATING_AGE_MAX),
-    emoji: getRandomElement(EMOJIS),
-    text: getRandomElement(COMMENT_TEXT),
-    author: getRandomElement(NAMES),
-    date: getRandomIntInclusive(DATE_MIN, DATE_MAX),
   };
 };
 

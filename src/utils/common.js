@@ -22,6 +22,23 @@ export let getRandomArrayElements = (array) => {
   return getElements;
 };
 
+export let sortMinToMax = (a, b) => {
+  if (a > b) {
+    return 1;
+  } else if (a < b) {
+    return -1;
+  }
+  return 0;
+};
+
+export let getRandomDateTime = () => {
+  const targetDateTime = new Date();
+  targetDateTime.setDate(targetDateTime.getDate() - getRandomIntInclusive(0, 10));
+  targetDateTime.setHours(targetDateTime.getHours() - getRandomIntInclusive(0, 24));
+  targetDateTime.setMinutes(targetDateTime.getMinutes() - getRandomIntInclusive(0, 60));
+  return targetDateTime;
+};
+
 
 // Функция возврщающая текст длинной не более 139 символов, если текст больше, он обрезается и в конец добавляется троеточие
 export let cutText = (text, limit) => {

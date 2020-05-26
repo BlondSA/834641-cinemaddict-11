@@ -1,5 +1,5 @@
 import UserComponent from "./components/user.js";
-import PageController from "./controllers/page.js";
+import PageController from "./controllers/page-controller.js";
 import FilmsFormComponent from "./components/films-form.js";
 import MenuComponent from "./components/site-menu.js";
 import StatsComponent from "./components/stats.js";
@@ -28,10 +28,9 @@ const siteFooterElement = document.querySelector(`.footer`);
 render(siteFooterElement, new StatisticsFilmComponent(), RenderPosition.BEFOREEND);
 
 const filmsFormComponent = new FilmsFormComponent();
-
-const pageController = new PageController(filmsFormComponent);
-
 const films = generateFilmCards(FILM_COUNT);
+const pageController = new PageController(filmsFormComponent, films);
+
 render(siteMainElement, filmsFormComponent, RenderPosition.BEFOREEND);
 
-pageController.render(films);
+pageController.render();
