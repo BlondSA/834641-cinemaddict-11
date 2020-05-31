@@ -130,6 +130,14 @@ const COMMENT_TEXT = [
   `Almost two hours? Seriously?`,
 ];
 
+const ESCAPE_BUTTON = `Escape`;
+const ESC_BUTTON = `Esc`;
+
+const Mode = {
+  DEFAULT: `default`,
+  EDIT: `edit`,
+};
+
 export {
   MONTH_NAMES,
   COUNTRY,
@@ -143,4 +151,8 @@ export {
   NAMES,
   EMOJIS,
   COMMENT_TEXT,
+  ESCAPE_BUTTON,
+  ESC_BUTTON,
+  Mode,
 };
+

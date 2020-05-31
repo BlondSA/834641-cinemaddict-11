@@ -19,7 +19,7 @@ const createEmojiTemplate = (emojis) => {
     .join(`\n`);
 };
 
-const createCommentTemplate = (commentData) => {
+const createCommentTemplate = (commentData) => {``
   const {commentId, commentEmotion, commentText, commentAuthor, commentDate} = commentData;
 
   return (
@@ -197,25 +197,35 @@ export default class FilmDetail extends AbstractSmartComponent {
     this._clickHandler = handler;
   }
 
+
+  recoveryListeners() {
+    this._subscribeOnEvents();
+  }
+
   _subscribeOnEvents() {
     const element = this.getElement();
 
     element.querySelector(`#watchlist`).addEventListener(`click`, (evt) => {
-      evt.preventDeafult();
+      evt.preventDefault();
       this._isAddedToWatch = !this._isAddedToWatch;
       this.rerender();
     });
 
     element.querySelector(`#watched`).addEventListener(`click`, (evt) => {
-      evt.preventDeafult();
+      evt.preventDefault();
       this._isWatched = !this._isWatched;
       this.rerender();
     });
 
     element.querySelector(`#favorite`).addEventListener(`click`, (evt) => {
-      evt.preventDeafult();
+      evt.preventDefault();
       this._isFavorite = !this._isFavorite;
       this.rerender();
+    });
+
+    element.querySelector(`.film-details__emoji-list`)
+    .addEventListener(`change`, (evt) => {
+      evt.preventDefault();
     });
   }
 
@@ -240,7 +250,7 @@ export default class FilmDetail extends AbstractSmartComponent {
           `.film-details__comment-delete`
       );
 
-      deleteButton.addEventListener(`click`, (evt) => {
+      deleteButton.addEventListener(`submit`, (evt) => {
         evt.preventDefault();
 
         handler(comment.id);
