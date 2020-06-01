@@ -138,6 +138,12 @@ const Mode = {
   EDIT: `edit`,
 };
 
+const DurationTime = {
+  MINUTES_IN_HOUR: 60,
+  SECONDS_IN_MINUTE: 60,
+  MILESECS_IN_SECOND: 1000
+};
+
 export {
   MONTH_NAMES,
   COUNTRY,
@@ -154,5 +160,6 @@ export {
   ESCAPE_BUTTON,
   ESC_BUTTON,
   Mode,
+  DurationTime,
 };
 

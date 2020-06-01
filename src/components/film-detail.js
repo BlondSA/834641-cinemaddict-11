@@ -19,7 +19,7 @@ const createEmojiTemplate = (emojis) => {
     .join(`\n`);
 };
 
-const createCommentTemplate = (commentData) => {``
+const createCommentTemplate = (commentData) => {
   const {commentId, commentEmotion, commentText, commentAuthor, commentDate} = commentData;
 
   return (
@@ -60,7 +60,6 @@ const createFilmDetailTemplate = (filmDetails) => {
     director,
     ratingAge,
     writers,
-    month,
     year,
     comments,
     fullDescription,
@@ -70,6 +69,7 @@ const createFilmDetailTemplate = (filmDetails) => {
   const commentsCount = comments.length;
   const emojisTemplate = createEmojiTemplate(EMOJIS);
   const genresList = createGenresTemplate(genres);
+
 
   const buttonAddWatchList = createButtonMarkup(`watchlist`, `Add to watchlist`, !filmDetails.isAddedToWatch);
   const buttonMarkAsWatches = createButtonMarkup(`watched`, `Already watched`, !filmDetails.isWatched);
@@ -115,7 +115,7 @@ const createFilmDetailTemplate = (filmDetails) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${month} ${year}</td>
+                <td class="film-details__cell">${year.format(`DD MMMM YYYY`)}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>

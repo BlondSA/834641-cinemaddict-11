@@ -1,17 +1,12 @@
-import {getRandomIntInclusive, getRandomElement, getRandomArrayElements, cutText, getRundomBoolean} from "../utils/common.js";
+import {getRandomIntInclusive, getRandomElement, getRandomArrayElements, cutText, getRundomBoolean, getRandomDate, getRandomDuration} from "../utils/common.js";
 import {MONTH_NAMES, COUNTRY, ACTORS, WRITERS, DIRECTOR, DESCRIPTIONS, POSTERS, GENRES, TITLES} from "../const.js";
 import {generateComments} from "./comments.js";
+import moment from "moment";
 
 const RATING_MIN = 0;
 const RATING_MAX = 9;
-const HOUR_MIN = 1;
-const HOUR_MAX = 3;
-const MINUTE_MIN = 0;
-const MINUTE_MAX = 59;
 const COMMENTS_MIN = 0;
 const COMMENTS_MAX = 5;
-const DATE_MIN = 1900;
-const DATE_MAX = 1965;
 const RATING_AGE_MIN = 0;
 const RATING_AGE_MAX = 18;
 const TEXT_CUT_COUNT = 139;
@@ -22,8 +17,8 @@ const generateFilmCard = () => {
     title: getRandomElement(TITLES),
     rating: getRandomIntInclusive(RATING_MIN, RATING_MAX) + `.` + getRandomIntInclusive(RATING_MIN, RATING_MAX),
     month: getRandomElement(MONTH_NAMES),
-    year: getRandomIntInclusive(DATE_MIN, DATE_MAX),
-    duration: `${getRandomIntInclusive(HOUR_MIN, HOUR_MAX)}h ${getRandomIntInclusive(MINUTE_MIN, MINUTE_MAX)}m`,
+    year: moment(getRandomDate(new Date(2010), new Date())),
+    duration: moment(getRandomDuration(getRandomIntInclusive(30, 300)), `h mm`).format(`h[h] mm[m]`),
     genres: getRandomArrayElements(GENRES),
     poster: getRandomElement(POSTERS),
     fullDescription: getRandomArrayElements(DESCRIPTIONS).join(` `),

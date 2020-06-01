@@ -1,4 +1,9 @@
 // Функция возвращающая случайное число от min до max (Максимум и минимум включаются)
+import moment from "moment";
+import {DurationTime} from "../const.js";
+
+export const MINUTES_IN_HOUR = 60;
+
 export let getRandomIntInclusive = (min, max) => {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -48,6 +53,43 @@ export let cutText = (text, limit) => {
   }
   text = text.slice(0, limit);
   return text.trim() + `...`;
+};
+
+export const getRandomDate = (start, end) => {
+  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+};
+
+export const formatTime = (date) => {
+  return moment(date).format(`hh:mm`);
+};
+
+export const formatDate = (date) => {
+  return moment(date).format(`DD MMMM`);
+};
+
+export const formaDuration = (duration) => {
+  const hours = moment.duration(duration, `minutes`).hours();
+  const minutes = moment.duration(duration, `minutes`).minutes();
+
+  return hours ? `${hours}h ${minutes}m` : `${minutes}m`;
+};
+
+export const getHours = (duration) => {
+  return Math.floor(duration / DurationTime.MINUTES_IN_HOUR);
+};
+export const getMinutes = (duration) => {
+  return duration % DurationTime.MINUTES_IN_HOUR;
+};
+
+export const formatCommentDate = (date) => {
+  return moment(date).fromNow();
+};
+
+export const getRandomDuration = (duration) => {
+  const hours = `${Math.floor(duration / MINUTES_IN_HOUR)}`;
+  const minutes = `${duration % MINUTES_IN_HOUR}`;
+
+  return `${hours}h ${minutes}m`;
 };
 
 
