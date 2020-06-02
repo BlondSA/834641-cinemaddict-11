@@ -1,3 +1,7 @@
+const SHOWING_FILM_ON_START = 5;
+const SHOWING_FILM_BY_BUTTON = 5;
+const SHOWING_EXTRA_FILMS = 2;
+
 const TITLES = [
   `The Man with the Golden Arm`,
   `The Great Flamarion`,
@@ -135,7 +139,7 @@ const ESC_BUTTON = `Esc`;
 
 const Mode = {
   DEFAULT: `default`,
-  EDIT: `edit`,
+  POPUP: `opened`,
 };
 
 const DurationTime = {
@@ -144,7 +148,16 @@ const DurationTime = {
   MILESECS_IN_SECOND: 1000
 };
 
+const ControlButton = {
+  WATCHLIST: `watchlist`,
+  WATCHED: `watched`,
+  FAVORITE: `favorite`,
+};
+
 export {
+  SHOWING_FILM_ON_START,
+  SHOWING_FILM_BY_BUTTON,
+  SHOWING_EXTRA_FILMS,
   MONTH_NAMES,
   COUNTRY,
   ACTORS,
@@ -159,6 +172,7 @@ export {
   COMMENT_TEXT,
   ESCAPE_BUTTON,
   ESC_BUTTON,
+  ControlButton,
   Mode,
   DurationTime,
 };
