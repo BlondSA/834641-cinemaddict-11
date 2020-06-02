@@ -1,11 +1,6 @@
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import {EMOJIS} from "../const.js";
 
-const createButtonMarkup = (name, descr, isActive = true) => {
-  return `<input type="checkbox" class="film-details__control-input visually-hidden" id="${name}" name="${name}" ${isActive ? `checked` : ``}>
-  <label for="${name}" class="film-details__control-label film-details__control-label--${name}">${descr}</label>`;
-};
-
 const createEmojiTemplate = (emojis) => {
   return emojis
     .map((emoji) => {
@@ -43,11 +38,25 @@ const createGenresTemplate = (genres) => {
   return genres.map((it) => `<span class="film-details__genre">${it}</span>`).join(`\n`);
 };
 
-const createAddEmojiTemplate = (emoji) => {
-  return emoji ? `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">` : ``;
+const createControlsTemplate = (control) => {
+  const {addedToWatchList, markedAsWatched, isFavorite} = control;
+  const selectedWatchList = addedToWatchList ? `checked` : ``;
+  const selectedWatched = markedAsWatched ? `checked` : ``;
+  const selectedFavorite = isFavorite ? `checked` : ``;
+
+  return (
+    `<input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${selectedWatchList}>
+    <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
+
+    <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${selectedWatched}>
+    <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
+
+    <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${selectedFavorite}>
+    <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>`
+  );
 };
 
-const createFilmDetailTemplate = (filmDetails) => {
+const createPopupTemplate = (filmDetails) => {
   const {
     title,
     originalTitle,
@@ -65,15 +74,11 @@ const createFilmDetailTemplate = (filmDetails) => {
     fullDescription,
   } = filmDetails;
 
+  const buttonsMarks = createControlsTemplate(filmDetails);
   const commentItems = comments.map((it) => createCommentTemplate(it)).join(`\n`);
   const commentsCount = comments.length;
   const emojisTemplate = createEmojiTemplate(EMOJIS);
   const genresList = createGenresTemplate(genres);
-
-
-  const buttonAddWatchList = createButtonMarkup(`watchlist`, `Add to watchlist`, !filmDetails.isAddedToWatch);
-  const buttonMarkAsWatches = createButtonMarkup(`watched`, `Already watched`, !filmDetails.isWatched);
-  const buttonMarkAsFavorite = createButtonMarkup(`favorite`, `Add to favorites`, !filmDetails.isFavorite);
 
   return `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
@@ -139,9 +144,7 @@ const createFilmDetailTemplate = (filmDetails) => {
         </div>
 
         <section class="film-details__controls">
-          ${buttonAddWatchList}
-          ${buttonMarkAsWatches}
-          ${buttonMarkAsFavorite}
+          ${buttonsMarks}
         </section>
       </div>
 
@@ -170,124 +173,77 @@ const createFilmDetailTemplate = (filmDetails) => {
   </section>`;
 };
 
-export default class FilmDetail extends AbstractSmartComponent {
-  constructor(filmDetails) {
+export default class Popup extends AbstractSmartComponent {
+  constructor(film) {
     super();
-    this._filmDetails = filmDetails;
-    this._clickHandler = null;
+    this._film = film;
 
-    this._subscribeOnEvents();
+    this._controlButtonsChangeHandler = null;
+
+    this._emoji = null;
+    this._setCommentsEmoji();
   }
 
   getTemplate() {
-    return createFilmDetailTemplate(this._filmDetails);
-  }
-
-  recoveryListeners() {
-    this.setClickHandler(this._clickHandler);
-    this._subscribeOnEvents();
+    return createPopupTemplate(this._film, this._emogi);
   }
 
   rerender() {
     super.rerender();
   }
 
-  setClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
-    this._clickHandler = handler;
-  }
-
-
   recoveryListeners() {
-    this._subscribeOnEvents();
+    this.setControlButtonsChangeHandler(this._controlButtonsChangeHandler);
+    this.setPopupCloseButtonClickHandler(this.popupCloseButtonClickHandler);
+    this.removePopupCloseButtonClickHandler(this._removeButtonHandler);
+    this._setCommentsEmoji();
   }
 
-  _subscribeOnEvents() {
-    const element = this.getElement();
-
-    element.querySelector(`#watchlist`).addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-      this._isAddedToWatch = !this._isAddedToWatch;
-      this.rerender();
+  setControlButtonsChangeHandler(handler) {
+    this.getElement().querySelector(`.film-details__controls`).addEventListener(`click`, (evt) => {
+      handler(evt.target.name);
     });
-
-    element.querySelector(`#watched`).addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-      this._isWatched = !this._isWatched;
-      this.rerender();
-    });
-
-    element.querySelector(`#favorite`).addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-      this._isFavorite = !this._isFavorite;
-      this.rerender();
-    });
-
-    element.querySelector(`.film-details__emoji-list`)
-    .addEventListener(`change`, (evt) => {
-      evt.preventDefault();
-    });
+    this._controlButtonsChangeHandler = handler;
   }
 
-  clearFormData() {
-    const form = this.getElement().querySelector(`form`);
-    const emoji = form.querySelector(`.film-details__add-emoji-label`);
-
-    if (emoji.firstChild) {
-      emoji.removeChild(emoji.firstChild);
-    }
-
-    form.reset();
+  clearPopupEmojiContainer() {
+    this.getElement().querySelector(`.film-details__add-emoji-label`).innerHTML = ``;
   }
 
-  setOnDeleteButtonCLickHandler(handler) {
-    const comments = this.getElement().querySelectorAll(
-        `.film-details__comment`
-    );
+  setPopupCloseButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
 
-    comments.forEach((comment) => {
-      const deleteButton = comment.querySelector(
-          `.film-details__comment-delete`
-      );
-
-      deleteButton.addEventListener(`submit`, (evt) => {
-        evt.preventDefault();
-
-        handler(comment.id);
-        comment.remove();
-      });
-    });
+    this.popupCloseButtonClickHandler = handler;
   }
 
-  setOnDeleteButtonCLickHandler(handler) {
-    const deleteButton = this.getElement().querySelectorAll(`.film-details__comment-delete`);
+  removePopupCloseButton(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`).removeEventListener(`click`, handler);
 
-    deleteButton.forEach((button) => button.addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-
-      button.disabled = true;
-      button.textContent = `Deleting...`;
-
-      const commentId = button.closest(`.film-details__comment`).id;
-
-      handler(commentId, button);
-    }));
+    this.removeButtonHandler = handler;
   }
 
-  setOnInputCommentHandler(handler) {
-    const commentField = this.getElement().querySelector(`.film-details__comment-input`);
-    commentField.addEventListener(`input`, handler);
-  }
+  _setCommentsEmoji() {
+    const emojiList = this.getElement().querySelector(`.film-details__emoji-list`);
+    const emojiPlace = this.getElement().querySelector(`.film-details__add-emoji-label`);
 
-  emojiChange(handler) {
-    const element = this.getElement();
+    emojiList.addEventListener(`click`, (evt) => {
+      const emojiLabel = evt.target.closest(`.film-details__emoji-label img`);
 
-    element.querySelector(`.film-details__emoji-list`).addEventListener(`click`, (evt) => {
-      if (evt.target.tagName !== `INPUT`) {
-        return;
+      if (emojiLabel) {
+        const selectedEmoji = emojiLabel.cloneNode(true);
+        selectedEmoji.style.width = `55px`;
+        selectedEmoji.style.height = `55px`;
+
+
+        if (emojiPlace.children.length === 0) {
+          emojiPlace.append(selectedEmoji);
+        }
+
+        if (emojiPlace.children.length === 1) {
+          emojiPlace.replaceChild(selectedEmoji, emojiPlace.querySelector(`img`));
+        }
       }
-      handler();
-      this.getElement().querySelector(`.film-details__add-emoji-label`).innerHTML = createAddEmojiTemplate(evt.target.value);
+
     });
   }
 }

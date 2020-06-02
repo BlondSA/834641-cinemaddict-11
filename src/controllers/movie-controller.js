@@ -1,115 +1,117 @@
 import FilmCardComponent from "../components/film-card.js";
-import FilmDetailComponent from "../components/film-detail.js";
-import {render, remove, replace, RenderPosition} from "../utils/render.js";
-import {ESCAPE_BUTTON, ESC_BUTTON} from "../const.js";
-import {Mode} from "../const.js";
+import PopupComponent from "../components/popup.js";
+import {render, RenderPosition, replace} from "../utils/render.js";
+import {ESCAPE_BUTTON, ESC_BUTTON, ControlButton, Mode} from "../const.js";
+
+const body = document.querySelector(`body`);
+
 
 export default class MovieController {
   constructor(container, onDataChange, onViewChange) {
     this._container = container;
-
-    this._filmCardComponent = null;
-    this._filmDetailComponent = null;
-
     this._onDataChange = onDataChange;
-    this._onViewChange = onViewChange;
+
+    this._popupComponent = null;
+    this._filmCardComponent = null;
+
     this._mode = Mode.DEFAULT;
-
-
-    this._openPopup = this._openPopup.bind(this);
-    this._closePopup = this._closePopup.bind(this);
+    this._onViewChange = onViewChange;
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
 
-
   render(film) {
-    this._film = film;
-    const oldFilmCardComponent = this._filmCardComponent;
-    const oldFilmDetailComponent = this._filmDetailComponent;
+    const container = this._container;
 
-    this._filmCardComponent = new FilmCardComponent(this._film);
-    this._filmCardComponent.setClickHandler((evt) => {
+    const oldFilmCardComponent = this._filmCardComponent;
+    const oldPopupComponent = this._popupComponent;
+
+    this._filmCardComponent = new FilmCardComponent(film);
+    this._popupComponent = new PopupComponent(film);
+
+    const renderPopup = () => {
+      body.appendChild(this._popupComponent.getElement());
+      this._mode = Mode.POPUP;
+      document.addEventListener(`keydown`, this._onEscKeyDown);
+    };
+
+    this._filmCardComponent.setAddToWatchListButtonClickHandler((evt) => {
       evt.preventDefault();
-      if (
-        evt.target.classList.contains(`film-card__poster`) ||
-        evt.target.classList.contains(`film-card__title`) ||
-        evt.target.classList.contains(`film-card__comments`)
-      ) {
-        this._openPopup(this._film);
-        document.addEventListener(`keydown`, this._onEscKeyDown);
+      this._onDataChange(this, film, Object.assign({}, film, {
+        addedToWatchList: !film.addedToWatchList,
+      }));
+    });
+
+    this._filmCardComponent.setMarkAsWatchButtonClickHandler((evt) => {
+      evt.preventDefault();
+      this._onDataChange(this, film, Object.assign({}, film, {
+        markedAsWatched: !film.markedAsWatched,
+      }));
+    });
+
+    this._filmCardComponent.setFavoriteButtonClickHandler((evt) => {
+      evt.preventDefault();
+      this._onDataChange(this, film, Object.assign({}, film, {
+        isFavorite: !film.isFavorite,
+      }));
+    });
+
+    this._popupComponent.setPopupCloseButtonClickHandler(() => {
+      this._closePopup();
+    });
+
+    this._popupComponent.setControlButtonsChangeHandler((buttonName) => {
+      if (buttonName === ControlButton.WATCHLIST) {
+        this._onDataChange(this, film, Object.assign({}, film, {
+          addedToWatchList: !film.addedToWatchList,
+        }));
+      }
+
+      if (buttonName === ControlButton.WATCHED) {
+        this._onDataChange(this, film, Object.assign({}, film, {
+          markedAsWatched: !film.markedAsWatched,
+        }));
+      }
+
+      if (buttonName === ControlButton.FAVORITE) {
+        this._onDataChange(this, film, Object.assign({}, film, {
+          isFavorite: !film.isFavorite,
+        }));
       }
     });
 
-    this._filmCardComponent.setAddToWatchlistButtonClickHandler(() => {
-      this._onDataChange(this, this._film, Object.assign({}, this._film, {
-        isAddedToWatch: !this._film.isAddedToWatch,
-      }));
+    this._filmCardComponent.setClickPopupShowElementsHandler(() => {
+      this._onViewChange();
+      renderPopup();
     });
 
-    this._filmCardComponent.setWatchedButtonClickHandler(() => {
-      this._onDataChange(this, this._film, Object.assign({}, this._film, {
-        isWatched: !this._film.isWatched,
-      }));
-    });
-
-    this._filmCardComponent.setFavoriteButtonClickHandler(() => {
-      this._onDataChange(this, this._film, Object.assign({}, this._film, {
-        isFavorite: !this._film.isFavorite,
-      }));
-    });
-
-    if (oldFilmDetailComponent && oldFilmCardComponent) {
+    if (oldFilmCardComponent && oldPopupComponent) {
       replace(this._filmCardComponent, oldFilmCardComponent);
-      replace(this._filmDetailComponent, oldFilmDetailComponent);
-    } else {
-      render(this._container, this._filmCardComponent, RenderPosition.BEFOREEND);
+      replace(this._popupComponent, oldPopupComponent);
+      return;
+    }
+    render(container, this._filmCardComponent, RenderPosition.BEFOREEND);
+  }
+
+  _closePopup() {
+    this._mode = Mode.DEFAULT;
+    this._popupComponent.getElement().remove();
+    this._popupComponent.clearPopupEmojiContainer();
+    this._popupComponent.removePopupCloseButton(() => {
+      this._closePopup();
+    });
+  }
+
+  _onEscKeyDown(evt) {
+    if (evt.key === ESC_BUTTON || evt.key === ESCAPE_BUTTON) {
+      this._closePopup();
+      document.removeEventListener(`keydown`, this._onEscKeyDown);
     }
   }
 
   setDefaultView() {
     if (this._mode !== Mode.DEFAULT) {
-      this._replaceDatailToCard();
-    }
-  }
-
-  // Открытие попапа
-  _openPopup(film) {
-    this._film = film;
-    this._onViewChange();
-    this._filmDetailComponent = new FilmDetailComponent(this._film);
-
-    this._filmDetailComponent.setClickHandler(() => {
       this._closePopup();
-      document.removeEventListener(`keydown`, this._onEscKeyDown);
-    });
-    const bodyElement = document.querySelector(`body`);
-    bodyElement.appendChild(this._filmDetailComponent.getElement());
-  }
-
-  // Закрытие попапа
-  _closePopup() {
-    this._mode = Mode.DEFAULT;
-    this._filmDetailComponent.getElement().remove();
-    const bodyElement = document.querySelector(`body`);
-    bodyElement.removeChild(this._filmDetailComponent.getElement());
-    const closeButton = this._filmDetailComponent.getElement().querySelector(
-        `.film-details__close-btn`
-    );
-    closeButton.removeEventListener(`click`, this._closePopup);
-  }
-
-  // Закрытие попапа по нажатию на ESC
-  _onEscKeyDown(evt) {
-    const isEscKey = evt.key === ESCAPE_BUTTON || evt.key === ESC_BUTTON;
-    if (isEscKey) {
-      this._closePopup();
-      document.removeEventListener(`keydown`, this._onEscKeyDown);
+      this._mode = Mode.DEFAULT;
     }
-  }
-
-  destroy() {
-    remove(this._filmCardComponent);
-    remove(this._filmDetailComponent);
-    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 }
