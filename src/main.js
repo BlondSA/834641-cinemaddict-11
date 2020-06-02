@@ -1,6 +1,6 @@
 import UserComponent from "./components/user.js";
 import PageController from "./controllers/page-controller.js";
-import FilmsFormComponent from "./components/films-form.js";
+import FilmsBoardComponent from "./components/films-board.js";
 import MenuComponent from "./components/site-menu.js";
 import StatsComponent from "./components/stats.js";
 import StatisticsFilmComponent from "./components/statistics.js";
@@ -27,10 +27,11 @@ render(siteNavigationElement, new StatsComponent(), RenderPosition.BEFOREEND);
 const siteFooterElement = document.querySelector(`.footer`);
 render(siteFooterElement, new StatisticsFilmComponent(), RenderPosition.BEFOREEND);
 
-const filmsFormComponent = new FilmsFormComponent();
+const filmsBoardComponent = new FilmsBoardComponent();
+
+const pageController = new PageController(filmsBoardComponent);
+
 const films = generateFilmCards(FILM_COUNT);
-const pageController = new PageController(filmsFormComponent, films);
+render(siteMainElement, filmsBoardComponent, RenderPosition.BEFOREEND);
 
-render(siteMainElement, filmsFormComponent, RenderPosition.BEFOREEND);
-
-pageController.render();
+pageController.render(films);

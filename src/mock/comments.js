@@ -1,5 +1,5 @@
 import {EMOJIS, COMMENT_TEXT, NAMES} from '../const.js';
-import {getRandomElement, getRandomDateTime, sortMinToMax} from '../utils/common.js';
+import {getRandomElement, getRandomDateTime, sortMinToMax, formatCommentDate} from '../utils/common.js';
 
 const generateComment = () => {
   return {
@@ -7,7 +7,7 @@ const generateComment = () => {
     commentEmotion: getRandomElement(EMOJIS),
     commentText: getRandomElement(COMMENT_TEXT),
     commentAuthor: getRandomElement(NAMES),
-    commentDate: getRandomDateTime(),
+    commentDate: formatCommentDate(getRandomDateTime(new Date(2015, 0, 1), new Date())),
   };
 };
 
